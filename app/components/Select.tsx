@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
-
 interface SelectProps {
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
   label?: string;
-  defaultValue?: string;
   value?: string;
 }
 
-const Select: React.FC<SelectProps> = ({ options, onChange, label, defaultValue, value }) => {
+const Select: React.FC<SelectProps> = ({ options, onChange, label, value }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = event.target.value;
     onChange(newValue);

@@ -1,5 +1,6 @@
 import { Invoice } from "../types/invoice";
 import _ from 'lodash';
+import { Product } from "../types/product";
 
 
 export const invoices: Invoice[] = [
@@ -33,10 +34,10 @@ export const invoices: Invoice[] = [
                 name: `Product ${i}`,
                 perUnitPrice: 100,
                 quantity: 10,
-                unit: 'gram' as 'gram',
+                unit: 'gram',
                 sgst: 5,
                 cgst: 5
-            }
+            } as Product
         }))
     ]
     }

@@ -4,7 +4,7 @@ import { localStorageHelper } from "./localstoragehelper";
 
 export const MyInfoService = {
   getMyInfo: () => {
-    const myInfo: any = localStorageHelper.get("myInfo");
+    const myInfo: MyInfo | null = localStorageHelper.get("myInfo");
     console.log('myInfo', myInfo);
     return myInfo;
   },

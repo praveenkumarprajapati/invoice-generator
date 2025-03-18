@@ -2,9 +2,10 @@
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { Invoice } from "../types/invoice";
+import { invoicesSelector } from "./invoiceSlice";
 
 export default function Invoices() {
-  const invoices: Invoice[] = useSelector((state: any) => state.invoices);
+  const invoices: Invoice[] = useSelector(invoicesSelector);
 
   return (
     <div className="max-w-5xl mx-auto p-6">
