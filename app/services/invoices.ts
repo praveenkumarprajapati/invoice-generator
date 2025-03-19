@@ -1,44 +1,18 @@
+"use client";
 import { Invoice } from "../types/invoice";
-import _ from 'lodash';
-import { Product } from "../types/product";
+import { localStorageHelper } from "./localstoragehelper";
 
-
-export const invoices: Invoice[] = [
-    {
-        id: "1e7b9d2e-8f6b-4e3b-9f6b-1e7b9d2e8f6b",
-        payTo: { name: "D Mart", address: "Mumbai"},
-        billTo: { name: "John Doe", address: "Pune"},
-        date: `2021-10-10`,
-        invoiceNumber: "INV-001",
-        products: [
-            {
-            id: "1a7b9d2e-8f6b-4e3b-9f6b-1a7b9d2e8f6b",
-            name: "Amul Milk",
-            perUnitPrice: 25,
-            quantity: 2,
-            unit: 'litre',
-            sgst: 5,
-            cgst: 5
-        }, {
-            id: "1b7b9d2e-8f6b-4e3b-9f6b-1b7b9d2e8f6b",
-            name: "Amul Butter",
-            perUnitPrice: 50,
-            quantity: 10,
-            unit: 'gram',
-            sgst: 5,
-            cgst: 5
-        },
-        ...(_.times(100, (i) => {
-            return {
-                id: `1c7b9d2e-8f6b-4e3b-9f6b-1c7b9d2e8f6b-${i}`,
-                name: `Product ${i}`,
-                perUnitPrice: 100,
-                quantity: 10,
-                unit: 'gram',
-                sgst: 5,
-                cgst: 5
-            } as Product
-        }))
-    ]
-    }
-];
+const KEY = "invoices"
+export const InvoiceService = {
+  get: () => {
+    const data: Partial<Invoice>[] | null = localStorageHelper.get(KEY);
+    console.log('invoices', data);
+    return data;
+  },
+  set: (invoices: Partial<Invoice[]>) => {
+    localStorageHelper.set(KEY, invoices);
+  },
+  clear: () => {
+    localStorageHelper.remove(KEY);
+  },
+};

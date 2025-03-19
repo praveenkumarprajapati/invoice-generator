@@ -2,7 +2,6 @@
 
 import { Invoice } from "@/app/types/invoice";
 import { Product } from "@/app/types/product";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
@@ -12,36 +11,31 @@ import { myInfoSelector } from "@/app/myinfoSlice";
 import { UNIT_OPTIONS } from "@/app/constants";
 import { Input } from "@/app/components/Input";
 import Select from "@/app/components/Select";
+import Image from "next/image";
 
 const NewInvoiceForm = () => {
   const sellerInfo = useSelector(myInfoSelector);
   const dispatch = useDispatch();
   const router = useRouter();
-  const _blank_data = {
-    name: "",
-    address: "",
-    gstin: "",
-  };
+
   const [formState, setFormState] = useState({
-    billTo: _blank_data,
-    payTo: _blank_data,
+    billTo: { name: "", address: "", gstin: "" },
+    payTo: { name: sellerInfo.name || "", address: sellerInfo.address || "", gstin: sellerInfo.gstin || "" },
   });
 
   useEffect(() => {
-    setFormState((state) => ({
-      ...state,
-      payTo: {
-        name: sellerInfo.name || "",
-        address: sellerInfo.address || "",
-        gstin: sellerInfo.gstin || "",
-      },
+    setFormState((prev) => ({
+      ...prev,
+      payTo: { name: sellerInfo.name || "", address: sellerInfo.address || "", gstin: sellerInfo.gstin || "" },
     }));
   }, [sellerInfo]);
 
   const [products, setProducts] = useState<Product[]>([]);
-  const removeProduct = (id: string) => {
-    setProducts((state) => state.filter((product) => product.id !== id));
+
+  const handleProductUpdate = (value: string, productID: string, field: string) => {
+    setProducts((prev) => prev.map((p) => (p.id === productID ? { ...p, [field]: value } : p)));
   };
+
   const updateFormState = (value: string, name: string) => {
     const [key, subKey] = name.split(".");
     setFormState((state) => ({
@@ -49,26 +43,14 @@ const NewInvoiceForm = () => {
       [key]: { ...state[key as keyof typeof formState], [subKey]: value },
     }));
   };
-  const handleProductUpdate = (value: string, productID: string, field: string) => {
-    setProducts((state) => {
-      return state.map((p) => {
-        if (p.id === productID) {
-          return {
-            ...p,
-            [field]: value,
-          };
-        }
-        return p;
-      });
-    });
-  };
+
   const handleSubmit = () => {
     const invoice: Invoice = {
       id: v4(),
       date: new Date().toISOString(),
       payTo: formState.payTo,
       billTo: formState.billTo,
-      products: products,
+      products,
       invoiceNumber: `INV-${new Date().getTime()}`,
     };
     dispatch(addInvoice(invoice));
@@ -76,200 +58,156 @@ const NewInvoiceForm = () => {
   };
 
   return (
-    <div className="max-w-5xl m-auto">
-      <div className="text-3xl text-bold m-auto">Create New Invoice</div>
-      <div className="m-5 flex flex-col gap-2">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="seller-name" className="font-bold">
-            ---Seller Information
-          </label>
-          <div className="grid grid-cols-3 gap-1">
-            <Input
-              type="text"
-              onChange={(value) => {
-                updateFormState(value, "payTo.name");
-              }}
-              value={formState.payTo.name}
-              placeholder="Seller Name"
-              name="sellerName"
-            />
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <h1 className="text-3xl font-bold text-left text-gray-800">Create New Invoice</h1>
 
-            <Input
-              type="text"
-              onChange={(value) => {
-                updateFormState(value, "payTo.address");
-              }}
-              value={formState.payTo.address}
-              placeholder="Seller Address"
-              name="sellerAddress"
-            />
-
-            <Input
-              type="text"
-              onChange={(value) => {
-                updateFormState(value, "payTo.gstin");
-              }}
-              value={formState.payTo.gstin}
-              placeholder="Seller GSTIN"
-              name="selletGSTIN"
-            />
-          </div>
+      {/* Seller & Buyer Information */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="p-4 border rounded-lg bg-gray-50">
+          <h2 className="font-bold text-lg mb-2 text-gray-700">Seller Information</h2>
+          <Input
+            type="text"
+            value={formState.payTo.name}
+            placeholder="Seller Name"
+            name="sellerName"
+            onChange={(value) => updateFormState(value, "payTo.name")}
+          />
+          <Input
+            type="text"
+            value={formState.payTo.address}
+            placeholder="Seller Address"
+            name="sellerAddress"
+            onChange={(value) => updateFormState(value, "payTo.address")}
+          />
+          <Input
+            type="text"
+            value={formState.payTo.gstin}
+            placeholder="Seller GSTIN"
+            name="sellerGSTIN"
+            onChange={(value) => updateFormState(value, "payTo.gstin")}
+          />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="customer-name" className="font-bold">
-            ---Buyer Information
-          </label>
-          <div className="grid grid-cols-3 gap-1">
-            <Input
-              type="text"
-              onChange={(value) => {
-                updateFormState(value, "billTo.name");
-              }}
-              value={formState.billTo.name}
-              placeholder="Buyer Name"
-              name="buyerName"
-            />
-
-            <Input
-              type="text"
-              onChange={(value) => {
-                updateFormState(value, "billTo.address");
-              }}
-              value={formState.billTo.address}
-              placeholder="Buyer Address"
-              name="buyerAddress"
-            />
-
-            <Input
-              type="text"
-              onChange={(value) => {
-                updateFormState(value, "billTo.gstin");
-              }}
-              value={formState.billTo.gstin}
-              placeholder="Buyer GSTIN"
-              name="buyerGSTIN"
-            />
-          </div>
+        <div className="p-4 border rounded-lg bg-gray-50">
+          <h2 className="font-bold text-lg mb-2 text-gray-700">Buyer Information</h2>
+          <Input
+            type="text"
+            value={formState.billTo.name}
+            placeholder="Buyer Name"
+            name="buyerName"
+            onChange={(value) => updateFormState(value, "billTo.name")}
+          />
+          <Input
+            type="text"
+            value={formState.billTo.address}
+            placeholder="Buyer Address"
+            name="buyerAddress"
+            onChange={(value) => updateFormState(value, "billTo.address")}
+          />
+          <Input
+            type="text"
+            value={formState.billTo.gstin}
+            placeholder="Buyer GSTIN"
+            name="buyerGSTIN"
+            onChange={(value) => updateFormState(value, "billTo.gstin")}
+          />
         </div>
+      </div>
 
-        {products.length > 0 && <div className="font-bold">Products</div>}
-        {products.map((product) => {
-          return (
-            <div className="p-4 relative border rounded" key={product.id}>
-              <div>
-                <Input
-                  type="text"
-                  onChange={(value) => {
-                    handleProductUpdate(value, product.id, "name");
-                  }}
-                  value={product.name}
-                  placeholder="Product Description"
-                  name="description"
-                />
-              </div>
-              <div className="grid grid-cols-5 mt-2 gap-2">
-                <input
-                  onChange={(e) => {
-                    handleProductUpdate(e.target.value, product.id, "quantity");
-                  }}
-                  value={product.quantity}
-                  className="p-2 border rounded"
-                  type="number"
-                  placeholder="Quantity"
-                  name="quantity"
-                />
-                <Select
-                  options={UNIT_OPTIONS}
-                  onChange={(value) => {
-                    handleProductUpdate(value, product.id, "unit");
-                  }}
-                  value={product.unit}
-                />
-                <select
-                  onChange={(e) => {
-                    handleProductUpdate(e.target.value, product.id, "unit");
-                  }}
-                  value={product.unit}
-                  className="p-2 border rounded"
-                  name="unit"
-                >
-                  {UNIT_OPTIONS.map((option) => {
-                    return (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    );
-                  })}
-                </select>
-                <input
-                  onChange={(e) => {
-                    handleProductUpdate(e.target.value, product.id, "sgst");
-                  }}
-                  value={product.sgst}
-                  className="p-2 border rounded"
-                  type="number"
-                  placeholder="SGST"
-                  name="sgst"
-                />
-                <input
-                  onChange={(e) => {
-                    handleProductUpdate(e.target.value, product.id, "perUnitPrice");
-                  }}
-                  value={product.perUnitPrice}
-                  className="p-2 border rounded"
-                  type="number"
-                  placeholder="Price Per Unit"
-                  name="perUnitPrice"
-                />
-                <input
-                  onChange={(e) => {
-                    handleProductUpdate(e.target.value, product.id, "cgst");
-                  }}
-                  value={product.cgst}
-                  className="p-2 border rounded"
-                  type="number"
-                  placeholder="CGST"
-                  name="cgst"
-                />
+      {/* Products Section */}
+      <div className="bg-gray-50 p-6 border rounded-lg shadow-md">
+        <h2 className="font-bold text-xl text-gray-700 mb-4 flex items-center gap-2">Items</h2>
+
+        {products.length > 0 ? (
+          <div className="space-y-4">
+            {products.map((product, index) => (
+              <div key={product.id} className="relative p-4 bg-white border rounded-lg shadow-md">
+                {/* Delete Button */}
                 <button
-                  className="group-hover:border-2 hover:text-red-800 absolute top-2 cursor-pointer right-[-25px]"
-                  onClick={() => {
-                    removeProduct(product.id);
-                  }}
+                  onClick={() => setProducts(products.filter((p) => p.id !== product.id))}
+                  className="absolute cursor-pointer top-3 right-3 text-gray-500 hover:text-red-600 transition"
                 >
-                  <Image className="text-red-500 hover:text-red-700" src="/icons/delete.svg" alt="delete" width={20} height={20} />
+                  <Image src="/icons/delete.svg" alt="Delete" width={20} height={20} />
                 </button>
+
+                {/* Product Header */}
+                <h3 className="font-semibold text-gray-800 mb-2">Item {index + 1}</h3>
+
+                <div className="grid grid-cols-6 gap-4">
+                  <Input
+                    type="text"
+                    placeholder="Product Description"
+                    value={product.name}
+                    name="name"
+                    className="col-span-3"
+                    onChange={(value) => handleProductUpdate(value, product.id, "name")}
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Quantity"
+                    value={product.quantity || ""}
+                    name="quantity"
+                    onChange={(value) => handleProductUpdate(value, product.id, "quantity")}
+                  />
+                  <Select
+                    placeholder="Unit"
+                    options={UNIT_OPTIONS}
+                    value={product.unit}
+                    onChange={(value) => handleProductUpdate(value, product.id, "unit")}
+                  />
+                </div>
+
+                <div className="grid grid-cols-5 gap-4 mt-2">
+                  <Input
+                    type="number"
+                    placeholder="SGST (%)"
+                    value={product.sgst || ""}
+                    name="sgst"
+                    onChange={(value) => handleProductUpdate(value, product.id, "sgst")}
+                  />
+                  <Input
+                    type="number"
+                    placeholder="CGST (%)"
+                    value={product.cgst || ""}
+                    name="cgst"
+                    onChange={(value) => handleProductUpdate(value, product.id, "cgst")}
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Price Per Unit"
+                    value={product.perUnitPrice || ""}
+                    name="perUnitPrice"
+                    onChange={(value) => handleProductUpdate(value, product.id, "perUnitPrice")}
+                  />
+                  {/* Total Price Calculation */}
+                  <div className="flex items-center justify-center  rounded text-gray-800 font-semibold p-1">
+                    <span>Total ₹{(product.quantity * product.perUnitPrice).toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center py-4">No Items added yet. Click below to add.</p>
+        )}
 
+        {/* Add Product Button */}
         <button
-          className="w-fit bg-zinc-600 hover:bg-zinc-700 text-white rounded p-2 shadow"
-          onClick={() => {
-            setProducts((state) => [
-              ...state,
-              {
-                id: v4(),
-                name: "",
-                amount: 0,
-                quantity: 0,
-                unit: "piece",
-                sgst: 0,
-                perUnitPrice: 0,
-                cgst: 0,
-              },
-            ]);
-          }}
+          className="w-full cursor-pointer flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white py-3 rounded-lg font-semibold transition duration-200 mt-4"
+          onClick={() => setProducts([...products, { id: v4(), name: "", quantity: 0, unit: "piece", sgst: 0, perUnitPrice: 0, cgst: 0 }])}
         >
-          + Add Product
-        </button>
-
-        <button onClick={handleSubmit} className="btn bg-blue-600 hover:bg-blue-700 text-white rounded p-2 shadow" type="submit">
-          Create Invoice
+          <Image color="#FFF" src="/icons/plus.svg" alt="Add" width={20} height={20} />
+          Add Item
         </button>
       </div>
+
+      {/* Submit Button */}
+      <button
+        onClick={handleSubmit}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transition duration-200"
+      >
+        Create Invoice
+      </button>
     </div>
   );
 };

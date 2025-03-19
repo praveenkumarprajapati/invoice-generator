@@ -7,6 +7,8 @@ import { invoicesSelector } from "./invoiceSlice";
 export default function Invoices() {
   const invoices: Invoice[] = useSelector(invoicesSelector);
 
+  console.log(invoices);
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       {/* Header */}

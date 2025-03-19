@@ -1,16 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { invoices } from '../services/invoices';
 import { Invoice } from '../types/invoice';
+import { InvoiceService } from '../services/invoices';
+
+const initialState: Invoice[] = []
 
 const invoiceSlice = createSlice({
-    name: 'invoice',
-    initialState: invoices,
+    name: 'invoices',
+    initialState: initialState,
     reducers: {
+        syncInvoices(state, action) {
+            console.log('Syncing', action.payload)
+            state = [...action.payload]
+            return state;
+        },
         addInvoice(state, action) {
             state.push(action.payload);
+            InvoiceService.set(state as Invoice[]);
+            return state;
         },
         removeInvoice(state, action) {
-            return state.filter(invoice => invoice.id !== action.payload);
+            const updated = state.filter(invoice => invoice.id !== action.payload);
+            InvoiceService.set(updated);
+            return updated
         }
     }
 });
@@ -19,5 +30,5 @@ export const invoicesSelector = (state: {
     invoices: Invoice[]
 }) => state.invoices
 
-export const { addInvoice, removeInvoice } = invoiceSlice.actions;
+export const { addInvoice, removeInvoice, syncInvoices } = invoiceSlice.actions;
 export default invoiceSlice.reducer;

@@ -2,6 +2,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { myInfoSelector, updateMyInfo } from "./myinfoSlice";
 import Link from "next/link";
+import Image from "next/image";
+import Tooltip from "./components/Tooltip";
 
 export default function Home() {
   const myInfo = useSelector(myInfoSelector);
@@ -14,13 +16,18 @@ export default function Home() {
 
       {/* My Information Card */}
       <div className="mt-6 p-6 w-full max-w-lg bg-white rounded-lg shadow-lg">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">My Information</h2>
+        <h2 className="text-xl flex items-center gap-2 font-semibold text-gray-800 mb-4 border-b pb-2">
+          <span>Master Data</span>
+          <Tooltip text="We will use this information to prefill form.">
+            <Image className="cursor-pointer" alt="info" src="/icons/info.svg" width={25} height={25} />
+          </Tooltip>
+        </h2>
 
         <div className="space-y-4">
           {/* Name */}
           <div>
             <label className="block text-gray-700 font-medium" htmlFor="name">
-              Name
+              Organization Name
             </label>
             <input
               onChange={(e) => dispatch(updateMyInfo({ name: e.target.value }))}
