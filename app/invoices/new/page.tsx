@@ -8,9 +8,7 @@ import { v4 } from "uuid";
 import { addInvoice } from "../invoiceSlice";
 import { useRouter } from "next/navigation";
 import { myInfoSelector } from "@/app/myinfoSlice";
-import { UNIT_OPTIONS } from "@/app/constants";
 import { Input } from "@/app/components/Input";
-import Select from "@/app/components/Select";
 import Image from "next/image";
 
 const NewInvoiceForm = () => {
@@ -168,11 +166,12 @@ const NewInvoiceForm = () => {
                   Item {index + 1}
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <Input
                     type="text"
                     placeholder="Product Description"
                     value={product.description}
+                    required
                     name="description"
                     className="col-span-3"
                     onChange={(value) =>
@@ -182,18 +181,11 @@ const NewInvoiceForm = () => {
                   <Input
                     type="number"
                     placeholder="Quantity"
+                    required
                     value={product.quantity || ""}
                     name="quantity"
                     onChange={(value) =>
                       handleProductUpdate(value, product.id, "quantity")
-                    }
-                  />
-                  <Select
-                    placeholder="Unit"
-                    options={UNIT_OPTIONS}
-                    value={product.unit}
-                    onChange={(value) =>
-                      handleProductUpdate(value, product.id, "unit")
                     }
                   />
                 </div>
@@ -201,7 +193,17 @@ const NewInvoiceForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
                   <Input
                     type="number"
-                    placeholder="SGST (%)"
+                    placeholder="Price Per Unit"
+                    value={product.perUnitPrice || ""}
+                    required
+                    name="perUnitPrice"
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "perUnitPrice")
+                    }
+                  />
+                  <Input
+                    type="number"
+                    placeholder="SGST % (Optional)"
                     value={product.sgst || ""}
                     name="sgst"
                     onChange={(value) =>
@@ -210,20 +212,11 @@ const NewInvoiceForm = () => {
                   />
                   <Input
                     type="number"
-                    placeholder="CGST (%)"
+                    placeholder="CGST % (Optional)"
                     value={product.cgst || ""}
                     name="cgst"
                     onChange={(value) =>
                       handleProductUpdate(value, product.id, "cgst")
-                    }
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Price Per Unit"
-                    value={product.perUnitPrice || ""}
-                    name="perUnitPrice"
-                    onChange={(value) =>
-                      handleProductUpdate(value, product.id, "perUnitPrice")
                     }
                   />
                   {/* Total Price Calculation */}
@@ -253,7 +246,6 @@ const NewInvoiceForm = () => {
                 id: v4(),
                 description: "",
                 quantity: 0,
-                unit: "piece",
                 sgst: 0,
                 perUnitPrice: 0,
                 cgst: 0,

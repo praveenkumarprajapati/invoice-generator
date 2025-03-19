@@ -11,6 +11,7 @@ type Props =
       placeholder?: string;
       className?: string;
       maxLines?: unknown;
+      required?: boolean;
     }
   | {
       type: "textarea";
@@ -20,6 +21,7 @@ type Props =
       placeholder?: string;
       className?: string;
       maxLines: number;
+      required?: boolean;
     };
 
 export const Input: React.FC<Props> = ({
@@ -30,13 +32,16 @@ export const Input: React.FC<Props> = ({
   placeholder,
   className,
   maxLines,
+  required,
 }) => {
   switch (type) {
     case "text":
     case "number":
       return (
         <div className={clsx("floating-label mt-3", className)}>
-          <span>{placeholder}</span>
+          <span>
+            {placeholder} {required && <span className="text-red-500">*</span>}
+          </span>
           <input
             id={name} // Links the label to the input
             name={name}
@@ -44,6 +49,7 @@ export const Input: React.FC<Props> = ({
             onChange={(e) => onChange(e.target.value)}
             value={value}
             placeholder={placeholder}
+            required={required}
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>

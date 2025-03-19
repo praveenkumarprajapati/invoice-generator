@@ -41,7 +41,7 @@ export default function Home() {
     setIsSaving(true);
     debounce();
     return () => debounce.cancel();
-  }, [myInfoState, debounce]);
+  }, [myInfoState]);
 
   return (
     <div className="flex flex-col items-center min-h-screen py-10 bg-gray-100">
@@ -105,12 +105,12 @@ export default function Home() {
       </div>
 
       {/* View Invoices Link */}
-      <div className="flex gap-2 mt-6 w-xl">
-        <Link className="btn btn-primary" href="/invoices">
+      <div className="flex gap-2 mt-6 w-11/12 sm:w-xl">
+        <Link className="btn btn-outline" href="/invoices">
           View My Invoices
         </Link>
 
-        <Link className="btn btn-secondary" href="/invoices/new">
+        <Link className="btn btn-primary" href="/invoices/new">
           <Image
             color="#000"
             src="icons/plus.svg"

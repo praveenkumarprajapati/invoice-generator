@@ -5,5 +5,4 @@ export interface Product {
   sgst: number;
   cgst: number;
   quantity: number;
-  unit: "kg" | "litre" | "piece" | "meter" | "gram";
 }
