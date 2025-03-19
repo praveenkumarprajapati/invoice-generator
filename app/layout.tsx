@@ -4,6 +4,8 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { SyncLocalStorage } from "./components/SyncLocalStoragrage";
 import Header from "./components/Header";
+import { Footer } from "./components/Footer";
+import { NotificationProvider } from "./components/NotificationProvider";
 
 export default function RootLayout({
   children,
@@ -12,12 +14,13 @@ export default function RootLayout({
 }>) {
   return (
     <Provider store={store}>
-      <html lang="en">
+      <html data-theme="winter" lang="en">
         <SyncLocalStorage />
         <body className={`antialiased`}>
+          <NotificationProvider />
           <Header />
-
-          {children}
+          <div className="min-h-[calc(100vh-64px)]">{children}</div>
+          <Footer />
         </body>
       </html>
     </Provider>

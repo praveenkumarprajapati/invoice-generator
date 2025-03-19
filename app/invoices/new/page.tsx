@@ -20,20 +20,34 @@ const NewInvoiceForm = () => {
 
   const [formState, setFormState] = useState({
     billTo: { name: "", address: "", gstin: "" },
-    payTo: { name: sellerInfo.name || "", address: sellerInfo.address || "", gstin: sellerInfo.gstin || "" },
+    payTo: {
+      name: sellerInfo.name || "",
+      address: sellerInfo.address || "",
+      gstin: sellerInfo.gstin || "",
+    },
   });
 
   useEffect(() => {
     setFormState((prev) => ({
       ...prev,
-      payTo: { name: sellerInfo.name || "", address: sellerInfo.address || "", gstin: sellerInfo.gstin || "" },
+      payTo: {
+        name: sellerInfo.name || "",
+        address: sellerInfo.address || "",
+        gstin: sellerInfo.gstin || "",
+      },
     }));
   }, [sellerInfo]);
 
   const [products, setProducts] = useState<Product[]>([]);
 
-  const handleProductUpdate = (value: string, productID: string, field: string) => {
-    setProducts((prev) => prev.map((p) => (p.id === productID ? { ...p, [field]: value } : p)));
+  const handleProductUpdate = (
+    value: string,
+    productID: string,
+    field: string
+  ) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === productID ? { ...p, [field]: value } : p))
+    );
   };
 
   const updateFormState = (value: string, name: string) => {
@@ -59,12 +73,16 @@ const NewInvoiceForm = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-left text-gray-800">Create New Invoice</h1>
+      <h1 className="text-3xl font-bold text-left text-gray-800">
+        Create New Invoice
+      </h1>
 
       {/* Seller & Buyer Information */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="p-4 border rounded-lg bg-gray-50">
-          <h2 className="font-bold text-lg mb-2 text-gray-700">Seller Information</h2>
+          <h2 className="font-bold text-lg mb-2 text-gray-700">
+            Seller Information
+          </h2>
           <Input
             type="text"
             value={formState.payTo.name}
@@ -73,10 +91,11 @@ const NewInvoiceForm = () => {
             onChange={(value) => updateFormState(value, "payTo.name")}
           />
           <Input
-            type="text"
+            type="textarea"
             value={formState.payTo.address}
-            placeholder="Seller Address"
+            placeholder="Seller Address (Max 3 lines)"
             name="sellerAddress"
+            maxLines={3}
             onChange={(value) => updateFormState(value, "payTo.address")}
           />
           <Input
@@ -89,7 +108,9 @@ const NewInvoiceForm = () => {
         </div>
 
         <div className="p-4 border rounded-lg bg-gray-50">
-          <h2 className="font-bold text-lg mb-2 text-gray-700">Buyer Information</h2>
+          <h2 className="font-bold text-lg mb-2 text-gray-700">
+            Buyer Information
+          </h2>
           <Input
             type="text"
             value={formState.billTo.name}
@@ -98,9 +119,10 @@ const NewInvoiceForm = () => {
             onChange={(value) => updateFormState(value, "billTo.name")}
           />
           <Input
-            type="text"
+            type="textarea"
             value={formState.billTo.address}
-            placeholder="Buyer Address"
+            placeholder="Buyer Address (max 3 lines)"
+            maxLines={3}
             name="buyerAddress"
             onChange={(value) => updateFormState(value, "billTo.address")}
           />
@@ -116,43 +138,63 @@ const NewInvoiceForm = () => {
 
       {/* Products Section */}
       <div className="bg-gray-50 p-6 border rounded-lg shadow-md">
-        <h2 className="font-bold text-xl text-gray-700 mb-4 flex items-center gap-2">Items {products.length || ""}</h2>
+        <h2 className="font-bold text-xl text-gray-700 mb-4 flex items-center gap-2">
+          Items {products.length || ""}
+        </h2>
         {products.length > 0 ? (
           <div className="space-y-4">
             {products.map((product, index) => (
-              <div key={product.id} className="relative p-4 bg-white border rounded-lg shadow-md">
+              <div
+                key={product.id}
+                className="relative p-4 bg-white border rounded-lg shadow-md"
+              >
                 {/* Delete Button */}
                 <button
-                  onClick={() => setProducts(products.filter((p) => p.id !== product.id))}
+                  onClick={() =>
+                    setProducts(products.filter((p) => p.id !== product.id))
+                  }
                   className="absolute cursor-pointer top-3 right-3 text-gray-500 hover:text-red-600 transition"
                 >
-                  <Image src="/icons/delete.svg" alt="Delete" width={20} height={20} />
+                  <Image
+                    src="/icons/delete.svg"
+                    alt="Delete"
+                    width={20}
+                    height={20}
+                  />
                 </button>
 
                 {/* Product Header */}
-                <h3 className="font-semibold text-gray-800 mb-2">Item {index + 1}</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">
+                  Item {index + 1}
+                </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                   <Input
                     type="text"
                     placeholder="Product Description"
-                    value={product.name}
-                    name="name"
+                    value={product.description}
+                    name="description"
                     className="col-span-3"
-                    onChange={(value) => handleProductUpdate(value, product.id, "name")}
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "description")
+                    }
                   />
                   <Input
                     type="number"
                     placeholder="Quantity"
                     value={product.quantity || ""}
                     name="quantity"
-                    onChange={(value) => handleProductUpdate(value, product.id, "quantity")}
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "quantity")
+                    }
                   />
                   <Select
                     placeholder="Unit"
                     options={UNIT_OPTIONS}
                     value={product.unit}
-                    onChange={(value) => handleProductUpdate(value, product.id, "unit")}
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "unit")
+                    }
                   />
                 </div>
 
@@ -162,40 +204,70 @@ const NewInvoiceForm = () => {
                     placeholder="SGST (%)"
                     value={product.sgst || ""}
                     name="sgst"
-                    onChange={(value) => handleProductUpdate(value, product.id, "sgst")}
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "sgst")
+                    }
                   />
                   <Input
                     type="number"
                     placeholder="CGST (%)"
                     value={product.cgst || ""}
                     name="cgst"
-                    onChange={(value) => handleProductUpdate(value, product.id, "cgst")}
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "cgst")
+                    }
                   />
                   <Input
                     type="number"
                     placeholder="Price Per Unit"
                     value={product.perUnitPrice || ""}
                     name="perUnitPrice"
-                    onChange={(value) => handleProductUpdate(value, product.id, "perUnitPrice")}
+                    onChange={(value) =>
+                      handleProductUpdate(value, product.id, "perUnitPrice")
+                    }
                   />
                   {/* Total Price Calculation */}
                   <div className="flex items-center justify-center  rounded text-gray-800 font-semibold p-1">
-                    <span>Total ₹{(product.quantity * product.perUnitPrice).toFixed(2)}</span>
+                    <span>
+                      Total ₹
+                      {(product.quantity * product.perUnitPrice).toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 text-center py-4">No Items added yet. Click below to add.</p>
+          <p className="text-gray-500 text-center py-4">
+            No Items added yet. Click below to add.
+          </p>
         )}
 
         {/* Add Product Button */}
         <button
           className="w-full cursor-pointer flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white py-3 rounded-lg font-semibold transition duration-200 mt-4"
-          onClick={() => setProducts([...products, { id: v4(), name: "", quantity: 0, unit: "piece", sgst: 0, perUnitPrice: 0, cgst: 0 }])}
+          onClick={() =>
+            setProducts([
+              ...products,
+              {
+                id: v4(),
+                description: "",
+                quantity: 0,
+                unit: "piece",
+                sgst: 0,
+                perUnitPrice: 0,
+                cgst: 0,
+              },
+            ])
+          }
         >
-          <Image color="#FFF" src="/icons/plus.svg" alt="Add" width={20} height={20} />
+          <Image
+            color="#FFF"
+            src="/icons/plus.svg"
+            alt="Add"
+            width={20}
+            height={20}
+          />
           Add Item
         </button>
       </div>

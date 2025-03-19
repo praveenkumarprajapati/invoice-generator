@@ -8,10 +8,13 @@ const Page = () => {
   // Extract id from the URL
   const { id } = useParams();
   const invoices = useSelector(invoicesSelector);
-  const invoice: Invoice = invoices.find((invoice) => invoice.id === id) as Invoice;
+  const invoice: Invoice = invoices.find(
+    (invoice) => invoice.id === id
+  ) as Invoice;
   if (!invoice) {
     return <div>Invoice not Found</div>;
   }
+  document.title = `Invoice-${invoice.invoiceNumber}`;
   return <InvoicePdf invoice={invoice} />;
 };
 

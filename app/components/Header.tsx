@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { name: "Home", path: "/" },
@@ -20,8 +21,9 @@ const Header = () => {
       <nav className="bg-white shadow-md p-4">
         <div className="container mx-auto flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            Invoice Generator
+          <Link href="/" className="text-2xl flex font-bold text-blue-600">
+            <Image src="logo.svg" alt="logo" width={30} height={30} />
+            <span>Invoice Generator</span>
           </Link>
 
           {/* Mobile Menu Button */}
@@ -33,7 +35,12 @@ const Header = () => {
           <ul className="hidden md:flex gap-4 text-gray-700">
             {NAV_LINKS.map(({ name, path }) => (
               <li key={path}>
-                <Link href={path} className={`hover:text-blue-600 transition ${pathname === path ? "text-blue-600 font-semibold" : ""}`}>
+                <Link
+                  href={path}
+                  className={`hover:text-blue-600 transition ${
+                    pathname === path ? "text-blue-600 font-semibold" : ""
+                  }`}
+                >
                   {name}
                 </Link>
               </li>
@@ -50,7 +57,9 @@ const Header = () => {
               <li key={path}>
                 <Link
                   href={path}
-                  className={`block p-2 hover:text-blue-600 transition ${pathname === path ? "text-blue-600 font-semibold" : ""}`}
+                  className={`block p-2 hover:text-blue-600 transition ${
+                    pathname === path ? "text-blue-600 font-semibold" : ""
+                  }`}
                   onClick={() => setIsOpen(false)} // Close menu on click
                 >
                   {name}

@@ -4,7 +4,22 @@ import { Invoice } from "../types/invoice";
 
 const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
   if (!invoice) {
-    return <div className="text-center text-red-500 font-semibold">Invoice not found</div>;
+    return (
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-base-200 text-base-content">
+        <h1 className="text-2xl font-bold text-error mb-4">
+          Invoice Not Found
+        </h1>
+        <p className="text-base-content/70 mb-6">
+          The invoice you are looking for does not exist or has been removed.
+        </p>
+        <button
+          onClick={() => (window.location.href = "/")}
+          className="btn btn-primary"
+        >
+          Back to Home
+        </button>
+      </div>
+    );
   }
 
   const hasSGST = invoice.products.some((product) => product.sgst > 0);
@@ -34,7 +49,9 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
           {/* Invoice Details */}
           <div className="flex justify-between text-gray-700 text-sm md:text-base">
             <div>
-              <p className="font-semibold">Invoice No: {invoice.invoiceNumber}</p>
+              <p className="font-semibold">
+                Invoice No: {invoice.invoiceNumber}
+              </p>
               <p>Date: {invoice.date}</p>
             </div>
           </div>
@@ -44,14 +61,22 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
             <div className="border-r border-gray-300 p-4 w-full ">
               <h3 className="font-semibold text-gray-700 mb-2">Bill To</h3>
               <p>{invoice.billTo?.name}</p>
-              <p>{invoice.billTo?.address}</p>
-              <p className="text-gray-600">GSTIN: {invoice.billTo?.gstin || "--"}</p>
+              <pre className="whitespace-pre-wrap font-sans">
+                {invoice.billTo?.address}
+              </pre>
+              <p className="text-gray-600">
+                GSTIN: {invoice.billTo?.gstin || "--"}
+              </p>
             </div>
             <div className="p-4 w-full">
               <h3 className="font-semibold text-gray-700 mb-2">Pay To</h3>
               <p>{invoice.payTo.name}</p>
-              <p>{invoice.payTo.address}</p>
-              <p className="text-gray-600">GSTIN: {invoice.payTo.gstin || "--"}</p>
+              <pre className="whitespace-pre-wrap font-sans">
+                {invoice.payTo.address}
+              </pre>
+              <p className="text-gray-600">
+                GSTIN: {invoice.payTo.gstin || "--"}
+              </p>
             </div>
           </div>
 
@@ -63,11 +88,25 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
                 <thead className="bg-gray-50 text-gray-700">
                   <tr className="text-sm md:text-base">
                     <th className="px-4 py-2 border border-gray-300">Sr No</th>
-                    <th className="px-4 py-2 border border-gray-300">Description</th>
-                    <th className="px-4 py-2 border border-gray-300">Unit Price</th>
-                    <th className="px-4 py-2 border border-gray-300">Quantity</th>
-                    {hasSGST && <th className="px-4 py-2 border border-gray-300">SGST (%)</th>}
-                    {hasCGST && <th className="px-4 py-2 border border-gray-300">CGST (%)</th>}
+                    <th className="px-4 py-2 border border-gray-300">
+                      Description
+                    </th>
+                    <th className="px-4 py-2 border border-gray-300">
+                      Unit Price
+                    </th>
+                    <th className="px-4 py-2 border border-gray-300">
+                      Quantity
+                    </th>
+                    {hasSGST && (
+                      <th className="px-4 py-2 border border-gray-300">
+                        SGST (%)
+                      </th>
+                    )}
+                    {hasCGST && (
+                      <th className="px-4 py-2 border border-gray-300">
+                        CGST (%)
+                      </th>
+                    )}
                     <th className="px-4 py-2 border border-gray-300">Total</th>
                   </tr>
                 </thead>
@@ -77,18 +116,40 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
                     const cgst = (product.perUnitPrice * product.cgst) / 100;
                     tax += sgst + cgst;
                     subtotal += product.perUnitPrice * product.quantity;
-                    const total = product.perUnitPrice * product.quantity + sgst + cgst;
+                    const total =
+                      product.perUnitPrice * product.quantity + sgst + cgst;
                     grandTotal += total;
 
                     return (
-                      <tr key={product.id} className="text-gray-700 text-sm md:text-base hover:bg-gray-50">
-                        <td className="px-4 py-2 border border-gray-300 text-center">{i + 1}</td>
-                        <td className="px-4 py-2 border border-gray-300">{product.name}</td>
-                        <td className="px-4 py-2 border border-gray-300 text-right">₹{product.perUnitPrice}</td>
-                        <td className="px-4 py-2 border border-gray-300 text-center">{product.quantity}</td>
-                        {hasSGST && <td className="px-4 py-2 border border-gray-300 text-center">{product.sgst}%</td>}
-                        {hasCGST && <td className="px-4 py-2 border border-gray-300 text-center">{product.cgst}%</td>}
-                        <td className="px-4 py-2 border border-gray-300 text-right font-semibold">₹{total}</td>
+                      <tr
+                        key={product.id}
+                        className="text-gray-700 text-sm md:text-base hover:bg-gray-50"
+                      >
+                        <td className="px-4 py-2 border border-gray-300 text-center">
+                          {i + 1}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300">
+                          {product.description}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300 text-right">
+                          ₹{product.perUnitPrice}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-300 text-center">
+                          {product.quantity}
+                        </td>
+                        {hasSGST && (
+                          <td className="px-4 py-2 border border-gray-300 text-center">
+                            {product.sgst}%
+                          </td>
+                        )}
+                        {hasCGST && (
+                          <td className="px-4 py-2 border border-gray-300 text-center">
+                            {product.cgst}%
+                          </td>
+                        )}
+                        <td className="px-4 py-2 border border-gray-300 text-right font-semibold">
+                          ₹{total}
+                        </td>
                       </tr>
                     );
                   })}
