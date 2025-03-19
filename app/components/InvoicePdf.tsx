@@ -19,10 +19,10 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
       {/* Print Button */}
       <button
         onClick={() => window.print()}
-        className="w-fit px-3 flex justify-center items-center cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 mt-4 rounded-md transition duration-200"
+        className="w-fit px-3 flex justify-center items-center border border-zinc-300 hover:border-zinc-400 cursor-pointer bg-zinc-200 hover:bg-zinc-300 text-gray-900 py-2 mt-4 rounded-md transition duration-200"
       >
         <Image src="/icons/print.svg" alt="print icon" width={22} height={22} />
-        <span>Print Invoice</span>
+        <span>Print</span>
       </button>
       <div className="printableArea mx-auto w-full md:w-full md:max-w-[900px] p-4 pt-0">
         <div className="flex flex-col">
@@ -40,7 +40,7 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
           </div>
 
           {/* Bill To & Ship To */}
-          <div className="flex border border-gray-300 rounded-md mt-4">
+          <div className="flex flex-col sm:flex-row border border-gray-300 rounded-md mt-4">
             <div className="border-r border-gray-300 p-4 w-full ">
               <h3 className="font-semibold text-gray-700 mb-2">Bill To</h3>
               <p>{invoice.billTo?.name}</p>
@@ -48,7 +48,7 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
               <p className="text-gray-600">GSTIN: {invoice.billTo?.gstin || "--"}</p>
             </div>
             <div className="p-4 w-full">
-              <h3 className="font-semibold text-gray-700 mb-2">Ship To</h3>
+              <h3 className="font-semibold text-gray-700 mb-2">Pay To</h3>
               <p>{invoice.payTo.name}</p>
               <p>{invoice.payTo.address}</p>
               <p className="text-gray-600">GSTIN: {invoice.payTo.gstin || "--"}</p>

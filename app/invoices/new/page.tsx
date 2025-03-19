@@ -116,8 +116,7 @@ const NewInvoiceForm = () => {
 
       {/* Products Section */}
       <div className="bg-gray-50 p-6 border rounded-lg shadow-md">
-        <h2 className="font-bold text-xl text-gray-700 mb-4 flex items-center gap-2">Items</h2>
-
+        <h2 className="font-bold text-xl text-gray-700 mb-4 flex items-center gap-2">Items {products.length || ""}</h2>
         {products.length > 0 ? (
           <div className="space-y-4">
             {products.map((product, index) => (
@@ -133,7 +132,7 @@ const NewInvoiceForm = () => {
                 {/* Product Header */}
                 <h3 className="font-semibold text-gray-800 mb-2">Item {index + 1}</h3>
 
-                <div className="grid grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                   <Input
                     type="text"
                     placeholder="Product Description"
@@ -157,7 +156,7 @@ const NewInvoiceForm = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-5 gap-4 mt-2">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
                   <Input
                     type="number"
                     placeholder="SGST (%)"

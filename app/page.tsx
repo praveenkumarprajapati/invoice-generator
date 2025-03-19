@@ -16,7 +16,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold text-blue-700">Invoice Generator</h1>
 
       {/* My Information Card */}
-      <div className="mt-6 p-6 w-full max-w-lg bg-white rounded-lg shadow-lg">
+      <div className="mt-6 p-6 w-11/12 md:w-full max-w-xl bg-white rounded-lg shadow-lg">
         <h2 className="text-xl flex items-center gap-2 font-semibold text-gray-800 mb-4 border-b pb-2">
           <span>Master Data</span>
           <Tooltip text="We will use this information to prefill form.">
