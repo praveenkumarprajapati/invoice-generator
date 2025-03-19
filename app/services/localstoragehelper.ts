@@ -1,6 +1,6 @@
 export const localStorageHelper = {
     get: <T>(key: string): T | null => {
-      if (typeof window === "undefined") return null; // Avoid SSR issues
+      // if (typeof window === "undefined") return null; // Avoid SSR issues
       try {
         const item = localStorage.getItem(key);
         return item ? JSON.parse(item) as T : null;
@@ -11,8 +11,7 @@ export const localStorageHelper = {
     },
   
     set: (key: string, value: unknown): void => {
-        console.log('set', key, value);
-      if (typeof window === "undefined") return;
+      // if (typeof window === "undefined") return;
       try {
         localStorage.setItem(key, JSON.stringify(value));
       } catch (error) {
@@ -21,12 +20,12 @@ export const localStorageHelper = {
     },
   
     remove: (key: string): void => {
-      if (typeof window === "undefined") return;
+      // if (typeof window === "undefined") return;
       localStorage.removeItem(key);
     },
   
     clear: (): void => {
-      if (typeof window === "undefined") return;
+      // if (typeof window === "undefined") return;
       localStorage.clear();
     }
   };

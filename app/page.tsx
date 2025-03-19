@@ -4,6 +4,7 @@ import { myInfoSelector, updateMyInfo } from "./myinfoSlice";
 import Link from "next/link";
 import Image from "next/image";
 import Tooltip from "./components/Tooltip";
+import { Input } from "./components/Input";
 
 export default function Home() {
   const myInfo = useSelector(myInfoSelector);
@@ -25,49 +26,34 @@ export default function Home() {
 
         <div className="space-y-4">
           {/* Name */}
-          <div>
-            <label className="block text-gray-700 font-medium" htmlFor="name">
-              Organization Name
-            </label>
-            <input
-              onChange={(e) => dispatch(updateMyInfo({ name: e.target.value }))}
-              value={myInfo.name || ""}
-              id="name"
-              className="w-full mt-1 p-2 border rounded focus:ring focus:ring-blue-300 outline-none"
-              placeholder="Enter your name"
-              type="text"
-            />
-          </div>
+
+          <Input
+            onChange={(value) => dispatch(updateMyInfo({ name: value }))}
+            value={myInfo.name || ""}
+            name="name"
+            placeholder="Organization name"
+            type="text"
+          />
 
           {/* Address */}
-          <div>
-            <label className="block text-gray-700 font-medium" htmlFor="address">
-              Address
-            </label>
-            <input
-              onChange={(e) => dispatch(updateMyInfo({ address: e.target.value }))}
-              value={myInfo.address || ""}
-              id="address"
-              className="w-full mt-1 p-2 border rounded focus:ring focus:ring-blue-300 outline-none"
-              placeholder="Enter your address"
-              type="text"
-            />
-          </div>
+
+          <Input
+            onChange={(value) => dispatch(updateMyInfo({ address: value }))}
+            value={myInfo.address || ""}
+            name="address"
+            placeholder="Enter your address"
+            type="text"
+          />
 
           {/* GSTIN */}
-          <div>
-            <label className="block text-gray-700 font-medium" htmlFor="gstin">
-              GSTIN
-            </label>
-            <input
-              onChange={(e) => dispatch(updateMyInfo({ gstin: e.target.value }))}
-              value={myInfo.gstin || ""}
-              id="gstin"
-              className="w-full mt-1 p-2 border rounded focus:ring focus:ring-blue-300 outline-none"
-              placeholder="Enter GSTIN"
-              type="text"
-            />
-          </div>
+
+          <Input
+            onChange={(value) => dispatch(updateMyInfo({ gstin: value }))}
+            value={myInfo.gstin || ""}
+            name="gstin"
+            placeholder="Enter GSTIN"
+            type="text"
+          />
         </div>
       </div>
 
