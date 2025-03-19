@@ -9,7 +9,6 @@ const invoiceSlice = createSlice({
     initialState: initialState,
     reducers: {
         syncInvoices(state, action) {
-            console.log('Syncing', action.payload)
             state = [...(action.payload || initialState)]
             return state;
         },

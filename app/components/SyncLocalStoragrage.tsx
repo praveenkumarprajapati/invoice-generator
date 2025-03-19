@@ -12,7 +12,6 @@ const SyncLocalStorage = () => {
   useEffect(() => {
     const myInfo = MyInfoService.getMyInfo();
     const invoices = InvoiceService.get();
-    console.log(invoices, 'Sync comp')
     dispatch(updateMyInfo(myInfo));
     dispatch(syncInvoices(invoices));
   }, [dispatch]);

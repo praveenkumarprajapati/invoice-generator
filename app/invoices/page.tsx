@@ -1,16 +1,33 @@
 "use client";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Invoice } from "../types/invoice";
-import { invoicesSelector } from "./invoiceSlice";
+import { invoicesSelector, removeInvoice } from "./invoiceSlice";
+import Image from "next/image";
+import Confirmation from "../components/Confirmation";
+import { useState } from "react";
 
 export default function Invoices() {
   const invoices: Invoice[] = useSelector(invoicesSelector);
+  const dispatch = useDispatch();
+  const [deleteId, setDeleteId] = useState("");
 
-  console.log(invoices);
+  const handleDelete = () => {
+    if (!deleteId) return;
 
+    dispatch(removeInvoice(deleteId));
+    setDeleteId("");
+  };
   return (
     <div className="max-w-5xl mx-auto p-6">
+      <Confirmation
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId("")}
+        onConfirm={handleDelete}
+        message="Are you sure?"
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-semibold text-gray-800">Invoices</h1>
@@ -26,7 +43,7 @@ export default function Invoices() {
             <tr>
               <th className="px-4 py-3 border border-gray-300 text-left">Seller Name</th>
               <th className="px-4 py-3 border border-gray-300 text-left">Customer Name</th>
-              <th className="px-4 py-3 border border-gray-300 text-center">Total Products</th>
+              <th className="px-4 py-3 border border-gray-300 text-center">Items count</th>
               <th className="px-4 py-3 border border-gray-300 text-center">Actions</th>
             </tr>
           </thead>
@@ -38,9 +55,19 @@ export default function Invoices() {
                   <td className="px-4 py-3 border border-gray-300">{invoice.billTo?.name}</td>
                   <td className="px-4 py-3 border border-gray-300 text-center">{invoice.products.length}</td>
                   <td className="px-4 py-3 border border-gray-300 text-center">
-                    <Link className="px-3 py-1 text-blue-600 font-medium hover:underline" href={`/invoices/${invoice.id}`}>
-                      View
-                    </Link>
+                    <div className="flex justify-center gap-2 items-center">
+                      <Link className="px-3 py-1 text-blue-600 font-medium hover:underline" href={`/invoices/${invoice.id}`}>
+                        <Image src="/icons/view.svg" alt="view" width={22} height={22} />
+                      </Link>
+                      <Image
+                        onClick={() => setDeleteId(invoice.id)}
+                        className="cursor-pointer"
+                        src="icons/delete.svg"
+                        alt="delete"
+                        width={22}
+                        height={22}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))

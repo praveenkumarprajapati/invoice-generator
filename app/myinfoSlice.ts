@@ -5,14 +5,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MyInfoService } from './services/myInfo';
 import { MyInfo } from './types/myInfo';
 
-console.log('get', MyInfoService.getMyInfo());
-
 const myInfoSlice = createSlice({
     name: 'myInfo',
     initialState: {},
     reducers: {
-        updateMyInfo(state, action) {
-            console.log('updateMyInfo', action.payload);    
+        updateMyInfo(state, action) {   
             state = {
                 ...state,
                 ...action.payload
